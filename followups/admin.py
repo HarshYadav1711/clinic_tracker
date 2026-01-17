@@ -19,9 +19,9 @@ class FollowUpAdmin(admin.ModelAdmin):
     )
     readonly_fields = ("public_token", "created_at", "updated_at")
 
+    @admin.display(description="Views")
     def view_count(self, obj):
         return obj.publicviewlog_set.count()
-    view_count.short_description = "Views"
 
 
 admin.site.register(UserProfile)
