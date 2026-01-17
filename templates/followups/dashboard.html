@@ -36,6 +36,7 @@
     <tr>
         <th>Patient</th>
         <th>Phone</th>
+        <th>Nationality</th>
         <th>Due</th>
         <th>Status</th>
         <th>Lang</th>
@@ -48,6 +49,7 @@
     <tr>
         <td>{{ f.patient_name }}</td>
         <td>{{ f.phone }}</td>
+        <td>{{ f.nationality }}</td>
         <td>{{ f.due_date }}</td>
         <td>{{ f.status }}</td>
         <td>{{ f.language }}</td>
@@ -61,13 +63,20 @@
             <a href="/{{ f.id }}/edit/">Edit</a>
 
             {% if f.status != "done" %}
-            <form method="post" action="/{{ f.id }}/done/" style="display:inline;">
+            <form method="post" action="{% url 'mark_done' f.id %}" style="display:inline;">
                 {% csrf_token %}
-                <button class="btn btn-danger" type="submit">
+                <button class="btn btn-secondary" type="submit">
                     Done
                 </button>
             </form>
             {% endif %}
+
+            <form method="post" action="{% url 'followup_delete' f.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this follow-up?');">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">
+                    Delete
+                </button>
+            </form>
         </td>
     </tr>
     {% empty %}

@@ -107,6 +107,25 @@ def mark_done(request, pk):
     return redirect("dashboard")
 
 
+# Delete follow-up
+@login_required
+def followup_delete(request, pk):
+    if request.method != "POST":
+        return HttpResponseForbidden()
+    
+    clinic = get_user_clinic(request)
+    if not clinic:
+        return HttpResponseForbidden("User does not have a clinic profile.")
+    
+    followup = get_object_or_404(FollowUp, pk=pk)
+    if followup.clinic != clinic:
+        return HttpResponseForbidden()
+    
+    followup.delete()
+    messages.success(request, "Follow-up deleted successfully.")
+    return redirect("dashboard")
+
+
 # Public View
 def public_view(request, token):
     followup = get_object_or_404(FollowUp, public_token=token)

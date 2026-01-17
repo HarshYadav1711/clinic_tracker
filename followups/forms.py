@@ -5,7 +5,7 @@ from .models import FollowUp
 class FollowUpForm(forms.ModelForm):
     class Meta:
         model = FollowUp
-        fields = ["patient_name", "phone", "language", "due_date", "notes"]
+        fields = ["patient_name", "phone", "language", "nationality", "due_date", "notes"]
         widgets = {
             "due_date": forms.DateInput(attrs={"type": "date"}),
         }
