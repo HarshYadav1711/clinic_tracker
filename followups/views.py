@@ -5,10 +5,21 @@ from .models import FollowUp, PublicViewLog
 from .forms import FollowUpForm
 
 
+# Helper function
+def get_user_clinic(request):
+    try:
+        return request.user.userprofile.clinic
+    except AttributeError:
+        return None
+
+
 # Dashboard function
 @login_required
 def dashboard(request):
-    clinic = request.user.userprofile.clinic
+    clinic = get_user_clinic(request)
+    if not clinic:
+        return HttpResponseForbidden("User does not have a clinic profile.")
+    
     followups = FollowUp.objects.filter(clinic=clinic)
     status = request.GET.get("status")
     if status:
@@ -30,10 +41,8 @@ def dashboard(request):
 # Follow-up View
 @login_required
 def followup_create(request):
-    # Check if user has a UserProfile
-    try:
-        clinic = request.user.userprofile.clinic
-    except:
+    clinic = get_user_clinic(request)
+    if not clinic:
         return HttpResponseForbidden("User does not have a clinic profile.")
     
     if request.method == "POST":
@@ -52,8 +61,12 @@ def followup_create(request):
 # Follow-up edit
 @login_required
 def followup_edit(request, pk):
+    clinic = get_user_clinic(request)
+    if not clinic:
+        return HttpResponseForbidden("User does not have a clinic profile.")
+    
     followup = get_object_or_404(FollowUp, pk=pk)
-    if followup.clinic != request.user.userprofile.clinic:
+    if followup.clinic != clinic:
         return HttpResponseForbidden()
     form = FollowUpForm(request.POST or None, instance=followup)
 
@@ -68,12 +81,18 @@ def followup_edit(request, pk):
 def mark_done(request, pk):
     if request.method != "POST":
         return HttpResponseForbidden()
+    
+    clinic = get_user_clinic(request)
+    if not clinic:
+        return HttpResponseForbidden("User does not have a clinic profile.")
+    
     followup = get_object_or_404(FollowUp, pk=pk)
-    if followup.clinic != request.user.userprofile.clinic:
+    if followup.clinic != clinic:
         return HttpResponseForbidden()
     followup.status = "done"
     followup.save()
     return redirect("dashboard")
+
 
 # Public View
 def public_view(request, token):
