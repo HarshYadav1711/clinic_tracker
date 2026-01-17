@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from .models import FollowUp, PublicViewLog
 from .forms import FollowUpForm
+from django.contrib import messages
 
 
 # Helper function
@@ -21,9 +22,20 @@ def dashboard(request):
         return HttpResponseForbidden("User does not have a clinic profile.")
     
     followups = FollowUp.objects.filter(clinic=clinic)
+    
+    # Status filter
     status = request.GET.get("status")
     if status:
         followups = followups.filter(status=status)
+    
+    # Date range filter
+    from_date = request.GET.get("from")
+    to_date = request.GET.get("to")
+    if from_date:
+        followups = followups.filter(due_date__gte=from_date)
+    if to_date:
+        followups = followups.filter(due_date__lte=to_date)
+    
     total = followups.count()
     pending = followups.filter(status="pending").count()
     done = followups.filter(status="done").count()
@@ -52,6 +64,7 @@ def followup_create(request):
             followup.clinic = clinic
             followup.created_by = request.user
             followup.save()
+            messages.success(request, "Follow-up created successfully.")
             return redirect("dashboard")
     else:
         form = FollowUpForm()
@@ -107,3 +120,4 @@ def public_view(request, token):
     else:
         message = "कृपया अपनी तय तारीख पर क्लिनिक आएं।"
     return render(request, "followups/public_view.html", {"message": message})
+

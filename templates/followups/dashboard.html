@@ -13,6 +13,23 @@
     <a href="{% url 'followup_create' %}">Create new follow-up</a>
 </p>
 
+<form method="get" style="margin-bottom: 20px;">
+    Status:
+    <select name="status">
+        <option value="">All</option>
+        <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>Pending</option>
+        <option value="done" {% if request.GET.status == "done" %}selected{% endif %}>Done</option>
+    </select>
+
+    From:
+    <input type="date" name="from" value="{{ request.GET.from }}">
+
+    To:
+    <input type="date" name="to" value="{{ request.GET.to }}">
+
+    <button type="submit">Filter</button>
+</form>
+
 <table border="1" cellpadding="5">
     <tr>
         <th>Patient</th>
@@ -20,6 +37,7 @@
         <th>Due Date</th>
         <th>Status</th>
         <th>Language</th>
+        <th>Views</th>
         <th>Public Link</th>
         <th>Actions</th>
     </tr>
@@ -31,6 +49,7 @@
         <td>{{ f.due_date }}</td>
         <td>{{ f.status }}</td>
         <td>{{ f.language }}</td>
+        <td>{{ f.publicviewlog_set.count }}</td>
         <td>
             <a href="{% url 'public_view' f.public_token %}" target="_blank">
                 Open
