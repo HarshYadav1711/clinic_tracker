@@ -10,7 +10,7 @@
 </p>
 
 <p>
-    <a href="/create/">Create new follow-up</a>
+    <a href="{% url 'followup_create' %}">Create new follow-up</a>
 </p>
 
 <table border="1" cellpadding="5">
@@ -32,15 +32,15 @@
         <td>{{ f.status }}</td>
         <td>{{ f.language }}</td>
         <td>
-            <a href="/p/{{ f.public_token }}/" target="_blank">
+            <a href="{% url 'public_view' f.public_token %}" target="_blank">
                 Open
             </a>
         </td>
         <td>
-            <a href="/{{ f.id }}/edit/">Edit</a>
+            <a href="{% url 'followup_edit' f.id %}">Edit</a>
 
             {% if f.status != "done" %}
-            <form method="post" action="/{{ f.id }}/done/" style="display:inline;">
+            <form method="post" action="{% url 'mark_done' f.id %}" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit">Mark Done</button>
             </form>

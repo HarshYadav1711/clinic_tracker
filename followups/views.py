@@ -30,11 +30,17 @@ def dashboard(request):
 # Follow-up View
 @login_required
 def followup_create(request):
+    # Check if user has a UserProfile
+    try:
+        clinic = request.user.userprofile.clinic
+    except:
+        return HttpResponseForbidden("User does not have a clinic profile.")
+    
     if request.method == "POST":
         form = FollowUpForm(request.POST)
         if form.is_valid():
             followup = form.save(commit=False)
-            followup.clinic = request.user.userprofile.clinic
+            followup.clinic = clinic
             followup.created_by = request.user
             followup.save()
             return redirect("dashboard")
