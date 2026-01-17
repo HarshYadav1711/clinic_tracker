@@ -36,6 +36,7 @@ class FollowUp(models.Model):
     patient_name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20)
     language = models.CharField(max_length=2, choices=LANG_CHOICES)
+    nationality = models.CharField(max_length=100, blank=True)
     notes = models.TextField(blank=True)
     due_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
