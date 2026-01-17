@@ -1,11 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Clinic Follow-up</title>
-</head>
-<body>
-    <h2>Follow-up Reminder</h2>
+    <title>Clinic Reminder</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f9fafb;
+            padding: 40px;
+            text-align: center;
+        }
 
+        .box {
+            background: white;
+            padding: 30px;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 6px;
+            box-shadow: 0 0 6px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Follow-up Reminder</h2>
     <p>{{ message }}</p>
+</div>
+
 </body>
 </html>

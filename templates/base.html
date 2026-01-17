@@ -2,22 +2,142 @@
 <html>
 <head>
     <title>Clinic Follow-up Tracker</title>
-</head>
-<body>
-    <h1>Clinic Follow-up Tracker</h1>
 
-    {% if user.is_authenticated %}
-        <p>
-            Logged in as {{ user.username }} |
-            <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" style="background:none;border:none;color:blue;cursor:pointer;text-decoration:underline;">Logout</button>
-            </form>
-        </p>
-        <hr>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f7fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f3f4f6;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+
+        .filter-box {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+
+        input, select {
+            padding: 6px;
+            margin-right: 8px;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 15px;
+            background: #ecfeff;
+            border: 1px solid #67e8f9;
+            color: #155e75;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <h1>Clinic Follow-up Tracker</h1>
+
+        {% if user.is_authenticated %}
+            <div>
+                {{ user.username }} |
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
     {% endif %}
 
     {% block content %}
     {% endblock %}
+
+</div>
+
 </body>
 </html>

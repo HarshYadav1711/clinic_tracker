@@ -1,44 +1,46 @@
 {% extends "base.html" %}
-
 {% block content %}
+
 <h2>Dashboard</h2>
 
-<p>
+<div class="summary">
     Total: {{ total }} |
     Pending: {{ pending }} |
     Done: {{ done }}
-</p>
+</div>
+
+<div class="filter-box">
+    <form method="get">
+        Status:
+        <select name="status">
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="done">Done</option>
+        </select>
+
+        From:
+        <input type="date" name="from">
+
+        To:
+        <input type="date" name="to">
+
+        <button class="btn btn-secondary" type="submit">Filter</button>
+    </form>
+</div>
 
 <p>
-    <a href="{% url 'followup_create' %}">Create new follow-up</a>
+    <a class="btn btn-primary" href="/create/">+ Create Follow-up</a>
 </p>
 
-<form method="get" style="margin-bottom: 20px;">
-    Status:
-    <select name="status">
-        <option value="">All</option>
-        <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>Pending</option>
-        <option value="done" {% if request.GET.status == "done" %}selected{% endif %}>Done</option>
-    </select>
-
-    From:
-    <input type="date" name="from" value="{{ request.GET.from }}">
-
-    To:
-    <input type="date" name="to" value="{{ request.GET.to }}">
-
-    <button type="submit">Filter</button>
-</form>
-
-<table border="1" cellpadding="5">
+<table>
     <tr>
         <th>Patient</th>
         <th>Phone</th>
-        <th>Due Date</th>
+        <th>Due</th>
         <th>Status</th>
-        <th>Language</th>
+        <th>Lang</th>
         <th>Views</th>
-        <th>Public Link</th>
+        <th>Public</th>
         <th>Actions</th>
     </tr>
 
@@ -51,25 +53,28 @@
         <td>{{ f.language }}</td>
         <td>{{ f.publicviewlog_set.count }}</td>
         <td>
-            <a href="{% url 'public_view' f.public_token %}" target="_blank">
+            <a href="/p/{{ f.public_token }}/" target="_blank">
                 Open
             </a>
         </td>
         <td>
-            <a href="{% url 'followup_edit' f.id %}">Edit</a>
+            <a href="/{{ f.id }}/edit/">Edit</a>
 
             {% if f.status != "done" %}
-            <form method="post" action="{% url 'mark_done' f.id %}" style="display:inline;">
+            <form method="post" action="/{{ f.id }}/done/" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit">Mark Done</button>
+                <button class="btn btn-danger" type="submit">
+                    Done
+                </button>
             </form>
             {% endif %}
         </td>
     </tr>
     {% empty %}
     <tr>
-        <td colspan="7">No follow-ups found.</td>
+        <td colspan="8">No follow-ups found.</td>
     </tr>
     {% endfor %}
 </table>
+
 {% endblock %}
